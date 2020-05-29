@@ -1,6 +1,6 @@
 {
   "name": "@lost-types/color",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Greatly missed Color type for JavaScript",
   "author": "snigo <snigo.ogins@gmail.com>",
   "homepage": "https://github.com/snigo/lost-types#readme",
@@ -28,5 +28,14 @@
   "bugs": {
     "url": "https://github.com/snigo/lost-types/issues"
   },
-  "keywords": ["color", "colour", "parser", "node", "css", "rgb", "hsl", "hex color"]
+  "keywords": [
+    "color",
+    "colour",
+    "parser",
+    "node",
+    "css",
+    "rgb",
+    "hsl",
+    "hex color"
+  ]
 }

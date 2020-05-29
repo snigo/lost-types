@@ -1,6 +1,6 @@
 {
   "name": "@lost-types/colorista",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Helper functions to work with Color object",
   "author": "snigo <snigo.ogins@gmail.com>",
   "homepage": "https://github.com/snigo/lost-types#readme",
@@ -29,5 +29,19 @@
   "bugs": {
     "url": "https://github.com/snigo/lost-types/issues"
   },
-  "keywords": ["color", "colour", "contrast", "hue", "saturation", "mix", "random", "temperature", "generate", "convert", "generator", "converter", "css"]
+  "keywords": [
+    "color",
+    "colour",
+    "contrast",
+    "hue",
+    "saturation",
+    "mix",
+    "random",
+    "temperature",
+    "generate",
+    "convert",
+    "generator",
+    "converter",
+    "css"
+  ]
 }

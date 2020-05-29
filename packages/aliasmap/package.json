@@ -1,6 +1,6 @@
 {
   "name": "@lost-types/aliasmap",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Alias map type from lost-types series",
   "author": "snigo <snigo.ogins@gmail.com>",
   "homepage": "https://github.com/snigo/lost-types#readme",
@@ -29,5 +29,13 @@
   "bugs": {
     "url": "https://github.com/snigo/lost-types/issues"
   },
-  "keywords": ["map", "indexing", "alias", "bidirectional map", "reverse map", "data structure", "multimap"]
+  "keywords": [
+    "map",
+    "indexing",
+    "alias",
+    "bidirectional map",
+    "reverse map",
+    "data structure",
+    "multimap"
+  ]
 }

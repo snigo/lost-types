@@ -1,6 +1,6 @@
 {
   "name": "@lost-types/publisher",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Publisher class provides essential pub-sub capabilities for its instances",
   "author": "snigo <snigo.ogins@gmail.com>",
   "homepage": "https://github.com/snigo/lost-types#readme",
@@ -29,5 +29,13 @@
   "bugs": {
     "url": "https://github.com/snigo/lost-types/issues"
   },
-  "keywords": ["reactive", "observables", "observable", "publisher", "subject", "subscription", "pubsub"]
+  "keywords": [
+    "reactive",
+    "observables",
+    "observable",
+    "publisher",
+    "subject",
+    "subscription",
+    "pubsub"
+  ]
 }
