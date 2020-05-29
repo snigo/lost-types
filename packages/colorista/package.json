@@ -28,5 +28,6 @@
   },
   "bugs": {
     "url": "https://github.com/snigo/lost-types/issues"
-  }
+  },
+  "keywords": ["color", "colour", "contrast", "hue", "saturation", "mix", "random", "temperature", "generate", "convert", "generator", "converter", "css"]
 }

@@ -27,5 +27,6 @@
   },
   "bugs": {
     "url": "https://github.com/snigo/lost-types/issues"
-  }
+  },
+  "keywords": ["color", "colour", "parser", "node", "css", "rgb", "hsl", "hex color"]
 }

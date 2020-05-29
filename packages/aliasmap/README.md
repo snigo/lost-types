@@ -25,7 +25,7 @@ const aliasMap = new AliasMap();
 
 ## Motivation
 
-The idea was originated while working on Color type of the same series. I needed to map color names to their hexadecimal values and Map() sounded like a correct choice for the job. However, later I also needed to map hexadecimal values back to the names, and in addition to linear O(n) complexity of this task, colors also have aliases, for example both “grey” and “gray” result in one value which make the opposite task “stateful”, because you will have to determine which one is a primary key and which one is alias. All these resulted in AliasMap class with constant time bi-directional retrieval in the following way:
+The idea was originated while working on [Color](https://github.com/snigo/lost-types/tree/master/packages/color) type of the same series. I needed to map color names to their hexadecimal values and Map() sounded like a correct choice for the job. However, later I also needed to map hexadecimal values back to the names, and in addition to linear O(n) complexity of this task, colors also have aliases, for example both “grey” and “gray” result in one value which make the opposite task “stateful”, because you will have to determine which one is a primary key and which one is alias. All these resulted in AliasMap class with constant time bi-directional retrieval in the following way:
 
 **`AliasMap.get(KEY) -> VALUE`**
 

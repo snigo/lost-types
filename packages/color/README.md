@@ -28,7 +28,7 @@ const red = new Color('red');
 
 Consider this example, you've assigned the color of the HTML element with `hsl()` notation, let's say `hsl(314, 86%, 49%)`. After that there is absolutely no way to get this value back and you will receive something like `rgb(232, 17, 182)` if you try. **“But I needed hue?!!”** And in general, it’s rather strange that we have Date Picker and Date type, but Color Picker doesn’t have Color type.
 
-Speaking of Date type, it became an architectural blueprint for Color class, just like Date, Color’s sole purpose is to parse color, store the most valuable information about this color for other libraries to use and output it in different formats. As simple as is.
+Speaking of Date type, it became an architectural blueprint for Color class, just like Date, Color’s sole purpose is to parse color, store the most valuable information about this color for other libraries to use and output it in different formats. As simple as is. If you're looking for library of function to adjust color, check [Colorista library](https://github.com/snigo/lost-types/tree/master/packages/colorista) from @lost-types collection.
 
 ```js
 

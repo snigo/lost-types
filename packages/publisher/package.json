@@ -28,5 +28,6 @@
   },
   "bugs": {
     "url": "https://github.com/snigo/lost-types/issues"
-  }
+  },
+  "keywords": ["reactive", "observables", "observable", "publisher", "subject", "subscription", "pubsub"]
 }

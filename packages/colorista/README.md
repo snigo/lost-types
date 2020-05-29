@@ -1,6 +1,6 @@
 # Colorista
 
-Helper functions to work with [Color](https://github.com/snigo/color).
+Helper functions to work with [Color](https://github.com/snigo/lost-types/tree/master/packages/color).
 
 ## Usage
 
