@@ -1,6 +1,6 @@
 {
   "name": "@lost-types/publisher",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Publisher class provides essential pub-sub capabilities for its instances",
   "author": "snigo <snigo.ogins@gmail.com>",
   "homepage": "https://github.com/snigo/lost-types#readme",

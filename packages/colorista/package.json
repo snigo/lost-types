@@ -1,6 +1,6 @@
 {
   "name": "@lost-types/colorista",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Helper functions to work with Color object",
   "author": "snigo <snigo.ogins@gmail.com>",
   "homepage": "https://github.com/snigo/lost-types#readme",
