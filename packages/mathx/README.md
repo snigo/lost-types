@@ -67,8 +67,6 @@ MathX.getPrecision(0.45); // 2
 MathX.getPrecision('12.300'); // 1
 MathX.getPrecision(-1.2e-11); // 12
 MathX.getPrecision(0.45); // 2
-MathX.getPrecision(0.45); // 2
-MathX.getPrecision(0.45); // 2
 MathX.getPrecision(12000000); // -6
 MathX.getPrecision(1.45e+100); // -98
 MathX.getPrecision(Infinity); // 0
