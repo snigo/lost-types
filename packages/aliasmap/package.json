@@ -1,5 +1,5 @@
 {
-  "name": "@lost-types/aliasmap",
+  "name": "@lost-types/alias-map",
   "version": "1.1.0",
   "description": "Alias map type from lost-types series",
   "author": "snigo <snigo.ogins@gmail.com>",
