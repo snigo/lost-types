@@ -24,15 +24,13 @@ const num = MathX.toNumber('33%'); // 0.33
 
 ```
 
-## Story behind MathX
+## Motivation
 
 There is always a time in every developer's life when he or she starts noticing some small functions that are being reused in almost every project. Sounds familiar? The only reasonable step from there is to make it a package and reuse them in a centralized manner. Also why not keep it open-source so people can benefit from it as well, and this is exactly what MathX is.
 
 The threshold for the function to enter the collection - I have to use it at least in 3 projects, right now there are not many functions yet and this is work in progress, but I guarantee that they are 100% useful!
 
 ## Functions
-
-***
 
 #### `MathX.approx()`
 
