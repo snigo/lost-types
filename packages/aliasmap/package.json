@@ -1,6 +1,6 @@
 {
   "name": "@lost-types/aliasmap",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Alias map type from lost-types series",
   "author": "snigo <snigo.ogins@gmail.com>",
   "homepage": "https://github.com/snigo/lost-types#readme",
