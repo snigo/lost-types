@@ -85,7 +85,7 @@ const [value, calculator] = useCalculator();
 
 return <button type="button" onClick={() => calculator.eval('2 + 2 * 20')}>=</button>;
 
-// Display conponent
+// Display component
 
 const [value] = useCalculator();
 

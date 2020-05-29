@@ -29,7 +29,7 @@ test('Publisher class', () => {
   });
 
   expect(subscription).toBeInstanceOf(Subscription);
-  expect(subscription.pubisher === myCounter).toBe(true);
+  expect(subscription.publisher === myCounter).toBe(true);
   expect(typeof subscription.unsubscribe).toBe('function');
 
   myCounter.increment();
@@ -48,6 +48,7 @@ test('Publisher class', () => {
   expect(myCounter.count).toBe(3);
 
   subscription.unsubscribe('count');
+  myCounter.increment();
 
   expect(sideEffectCount).toBe(3);
   expect(myCounter.count).toBe(4);
