@@ -1,0 +1,30 @@
+{
+  "name": "@lost-types/colorista",
+  "version": "0.1.0",
+  "description": "Helper functions to work with Color object",
+  "author": "snigo <snigo.ogins@gmail.com>",
+  "homepage": "https://github.com/snigo/lost-types#readme",
+  "license": "MIT",
+  "main": "lib/colorista.js",
+  "types": "colorista.d.ts",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/snigo/lost-types.git"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "bugs": {
+    "url": "https://github.com/snigo/lost-types/issues"
+  }
+}

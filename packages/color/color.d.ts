@@ -1,4 +1,4 @@
-interface ColorObject {
+export interface ColorObject {
   red?: number | string;
   green?: number | string;
   blue?: number | string;
@@ -8,6 +8,8 @@ interface ColorObject {
   alpha?: number | string;
 }
 
+export type AnyColor = string | number[] | ColorObject | Color;
+
 declare class Color {
   red: number;
   green: number;
@@ -16,7 +18,7 @@ declare class Color {
   saturation: number;
   lightness: number;
   alpha: number;
-  constructor(color: string | number[] | ColorObject | Color);
+  constructor(color: AnyColor);
   get name(): string;
   get luminance(): number;
   get hueGroup(): number;
