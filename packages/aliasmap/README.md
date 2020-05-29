@@ -134,6 +134,8 @@ aliasMap.getOwnDescriptor(); // {strict: false, immutable: true}
 
 ```
 
+***
+
 #### `AliasMap.prototype.get()`
 
 Returns value if primary key or any of aliases provided and primary key if value provided.
