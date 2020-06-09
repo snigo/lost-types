@@ -65,8 +65,8 @@ test('Should preserve hue value for desaturated colors if hue value provided', (
 
 test('Should throw error if no or incorrect color provided', () => {
   expect(() => new Color('fff')).toThrow();
-  expect(() => new Color('hsla(33 100% 63% 0.3333)')).toThrow();
+  expect(() => new Color('hsla(33 100% 63% 0.33)')).toThrow();
   expect(() => new Color([255, 0])).toThrow();
   expect(() => new Color('rgb (13, 13, 13)')).toThrow();
-  expect(() => new Color('hsla(33 100% 63% 0.3333)')).toThrow();
+  expect(() => new Color('hsla(33 100% 63% 0.33)')).toThrow();
 });

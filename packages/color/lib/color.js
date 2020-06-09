@@ -1,8 +1,8 @@
 const { round, modulo } = require('../../mathx/lib/mathx');
 
-const parseColor = require('./parse-color');
-const { decByteToHex } = require('./utils');
-const namedColors = require('./named-colors');
+const parseColor = require('./parse');
+const { decByteToHex } = require('./hex');
+const { getColorName } = require('./named');
 
 
 /**
@@ -27,43 +27,29 @@ class Color {
     const parsedColor = parseColor(color);
     if (!parsedColor.length) throw Error('Cannot recognize color');
 
-    const [
-      red,
-      green,
-      blue,
-      hue,
-      saturation,
-      lightness,
-      alpha,
-    ] = parsedColor;
-
     Object.defineProperties(this, {
       red: {
-        value: red,
+        value: parsedColor[0],
       },
       green: {
-        value: green,
+        value: parsedColor[1],
       },
       blue: {
-        value: blue,
+        value: parsedColor[2],
       },
       hue: {
-        value: hue,
+        value: parsedColor[3],
       },
       saturation: {
-        value: saturation,
+        value: parsedColor[4],
       },
       lightness: {
-        value: lightness,
+        value: parsedColor[5],
       },
       alpha: {
-        value: alpha,
+        value: parsedColor[6],
       },
     });
-  }
-
-  static get name() {
-    return 'Color';
   }
 
   get luminance() {
@@ -85,7 +71,8 @@ class Color {
   }
 
   get name() {
-    return namedColors.get(this.toHexString().substring(0, 7));
+    const name = getColorName(this.toHexString().substring(0, 7));
+    return this.alpha === 1 ? name : `${name}*`;
   }
 
   /**

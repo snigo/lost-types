@@ -1,101 +1,178 @@
 const Range = require('../../range/lib/range');
 const { toNumber, round } = require('../../mathx/lib/mathx');
 
-const byteRange = new Range(0, 255);
-const hueRange = new Range(0, 359);
+const rgbRange = new Range(255);
+const hueRange = new Range(359);
+const oneRange = new Range(1);
 
 /**
- * @function hexByteToDec Converts 8-bit hexadecimal number to a decimal number
+ * @function appendHSL Helper function for parseColor()
+ * Appends Hue, Saturation and Luminosity values to input rgbaArray
  *
- * @param {string} hex 8-bit hexadecimal number between 00 and ff
+ * @param {number[]} rgbaArray Array of red, green, blue and alpha values
  *
- * @returns {number} Converted decimal number
+ * @returns {number[]} Array of red, green, blue, hue, saturation, luminosity and alpha values where
+ * red, green and blue are integers in [0, 255] range, hue is integer in [0, 359] range
+ * saturation and luminosity are integers in [0, 100] range and alpha is decimal in [0, 1] range
  */
-function hexByteToDec(hex) {
-  if (/[^0-9a-f]/i.test(hex)) return NaN;
-  return parseInt(hex.length === 1 ? hex.repeat(2) : hex.substring(0, 2), 16);
+function appendHSL([red, green, blue, alpha]) {
+  const R = red / 255;
+  const G = green / 255;
+  const B = blue / 255;
+
+  const min = Math.min(R, G, B);
+  const max = Math.max(R, G, B);
+  const chroma = max - min;
+
+  let hue = 0;
+  let saturation = 0;
+  let lightness = 0;
+
+  if (chroma === 0) {
+    hue = 0;
+  } else if (max === R) {
+    hue = (G - B) / chroma;
+  } else if (max === G) {
+    hue = (B - R) / chroma + 2;
+  } else {
+    hue = (R - G) / chroma + 4;
+  }
+
+  hue = hueRange.mod(round(hue * 60, 0));
+
+  lightness = (max + min) / 2;
+
+  if (lightness > 0 && lightness <= 0.5) {
+    saturation = chroma / (2 * lightness);
+  } else {
+    saturation = chroma / ((2 - 2 * lightness) || lightness);
+  }
+
+  lightness = oneRange.clamp(round(lightness, 2));
+  saturation = oneRange.clamp(round(saturation, 2));
+
+
+  return [red, green, blue, hue, saturation, lightness, alpha];
 }
 
 
 /**
- * @function decByteToHex Converts decimal number to 8-bit hexadecimal number
+ * @function appendRGB Helper function for parseColor()
+ * Appends Red, Green and Blue values to input hslaArray
  *
- * @param {number | string} num Number to be converted
+ * @param {number[]} hslaArray Array of hue, saturation, luminance and alpha values
  *
- * @returns {string} 8-bit hexadecimal number between 00 and ff
+ * @returns {number[]} Array of red, green, blue, hue, saturation, luminosity and alpha values where
+ * red, green and blue are integers in [0, 255] range, hue is integer in [0, 359] range
+ * saturation and luminosity are integers in [0, 100] range and alpha is decimal in [0, 1] range
  */
-function decByteToHex(num) {
-  num = byteRange.clamp(+num);
-  return num.toString(16).padStart(2, '0');
+function appendRGB([hue, saturation, lightness, alpha]) {
+  const chroma = (1 - Math.abs(2 * lightness - 1)) * saturation;
+  const x = chroma * (1 - Math.abs(((hue / 60) % 2) - 1));
+  const brightness = lightness - chroma / 2;
+
+  let red = 0;
+  let green = 0;
+  let blue = 0;
+
+  if (hue >= 0 && hue < 60) {
+    red = chroma;
+    green = x;
+    blue = 0;
+  } else if (hue >= 60 && hue < 120) {
+    red = x;
+    green = chroma;
+    blue = 0;
+  } else if (hue >= 120 && hue < 180) {
+    red = 0;
+    green = chroma;
+    blue = x;
+  } else if (hue >= 180 && hue < 240) {
+    red = 0;
+    green = x;
+    blue = chroma;
+  } else if (hue >= 240 && hue < 300) {
+    red = x;
+    green = 0;
+    blue = chroma;
+  } else if (hue >= 300 && hue < 360) {
+    red = chroma;
+    green = 0;
+    blue = x;
+  }
+
+  red = rgbRange.clamp(round((red + brightness) * 255, 0));
+  green = rgbRange.clamp(round((green + brightness) * 255, 0));
+  blue = rgbRange.clamp(round((blue + brightness) * 255, 0));
+
+  return [red, green, blue, hue, saturation, lightness, alpha];
+}
+
+function assumeAlphaValue(value) {
+  if (value == null) return 1;
+  return oneRange.clamp(toNumber(value, 4));
 }
 
 
-/**
- * @function toDegrees Converts CSS approved angle units to degrees
- * List of units: https://developer.mozilla.org/en-US/docs/Web/CSS/angle
- *
- * @param {string} angle Angle unitin degrees, turns, radians or gradians
- *
- * @returns {number} Number of degrees
- */
-function toDegrees(angle) {
-  const [unit] = angle.toString().match(/\D+$/) || ['deg'];
-  switch (unit.toLowerCase()) {
+function assumeHueValue(value) {
+  if (typeof value === 'number') return hueRange.mod(round(value, 0));
+  if (typeof value !== 'string') return NaN;
+  value = value.trim().toLowerCase();
+
+  const hue = value.match(/^([+\-0-9e.]+)(turn|g?rad|deg)?$/);
+  if (!hue) return NaN;
+  hue[1] = round(hue[1]);
+  hue[2] = hue[2] || 'deg';
+  switch (hue[2]) {
     case 'turn':
-      return round(hueRange.mod(parseFloat(angle.toString()) * 360), 0);
+      return round(hueRange.mod(parseFloat(hue[1]) * 360), 0);
 
     case 'rad':
-      return round(hueRange.mod(parseFloat(angle.toString()) * (180 / Math.PI)), 0);
+      return round(hueRange.mod(parseFloat(hue[1]) * (180 / Math.PI)), 0);
 
     case 'grad':
-      return round(hueRange.mod(parseFloat(angle.toString()) * 0.9), 0);
+      return round(hueRange.mod(parseFloat(hue[1]) * 0.9), 0);
 
     case 'deg':
-      return round(hueRange.mod(parseFloat(angle.toString())), 0);
+      return round(hueRange.mod(parseFloat(hue[1])), 0);
     default:
       return NaN;
   }
 }
 
-function extractGroups(str, re) {
-  const groups = re.exec(str);
-  if (!groups) throw Error(`Cannot recognize color: ${str}`);
-  return groups.filter((value, index) => index && !!value);
+
+function assumePersentageValue(value) {
+  if (typeof value === 'number') return oneRange.clamp(round(value, 2));
+  if (!/%$/.test(value)) return NaN;
+  return oneRange.clamp(toNumber(value, 2));
 }
 
-function assumeRgbPercentage(value) {
-  if (value == null) return undefined;
 
-  if (/%$/.test(value.toString())) {
-    return byteRange.fromFraction(toNumber(value), 0);
-  }
-  return round(value, 0);
+function assumeRgbValue(value) {
+  if (typeof value === 'number') return rgbRange.clamp(round(value, 0));
+  if (typeof value !== 'string') return NaN;
+  return rgbRange.clamp(/%$/.test(value) ? rgbRange.fromFraction(toNumber(value), 0) : round(value, 0));
 }
 
-function assumeHslPercentage(value) {
-  if (value == null) return undefined;
 
-  return round(/%$/.test(value.toString()) ? +value.toString().replace(/%/, '') / 100 : value, 2);
-}
-
-/**
- * @function defined Checks whether arguments are defined (not equal to undefined)
- *
- * @param  {...any} args List of values to be checked
- *
- * @returns {boolean} True if all arguments are defined
- * or false if at least one argument is undefined
- */
 function defined(...args) {
-  return args.every((arg) => arg != null && !Number.isNaN(arg));
+  // eslint-disable-next-line eqeqeq
+  return args.every((arg) => arg || (!arg && arg == 0));
+}
+
+
+function extractGroups(str, re) {
+  return (re.exec(str) || []).filter((value, index) => index && !!value);
 }
 
 module.exports = {
-  assumeHslPercentage,
-  assumeRgbPercentage,
-  decByteToHex,
+  appendHSL,
+  appendRGB,
+  assumeAlphaValue,
+  assumeHueValue,
+  assumePersentageValue,
+  assumeRgbValue,
   defined,
   extractGroups,
-  hexByteToDec,
-  toDegrees,
+  rgbRange,
 };

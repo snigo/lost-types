@@ -1,51 +1,84 @@
-const { hexByteToDec, decByteToHex, toDegrees } = require('../lib/utils');
+const {
+  appendHSL,
+  appendRGB,
+  assumeAlphaValue,
+  assumeHueValue,
+  assumePersentageValue,
+  assumeRgbValue,
+  defined,
+  extractGroups,
+} = require('../lib/utils');
 
-test('hexByteToDec should correctly convert hexidecimal number to integer case insensitive', () => {
-  expect(hexByteToDec('ff')).toBe(255);
-  expect(hexByteToDec('0F')).toBe(15);
-  expect(hexByteToDec('aB')).toBe(171);
+test('appendHSL function should append HSL values to the RGBA array', () => {
+  expect(appendHSL([0, 191, 255, 1])).toEqual([0, 191, 255, 195, 1, 0.5, 1]);
+  expect(appendHSL([23, 80, 42, 0.45])).toEqual([23, 80, 42, 140, 0.55, 0.2, 0.45]);
+  expect(appendHSL([0, 255, 0, 0])).toEqual([0, 255, 0, 120, 1, 0.5, 0]);
 });
 
-test('hexByteToDec should repeat number if only one digit provided', () => {
-  expect(hexByteToDec('f')).toBe(255);
-  expect(hexByteToDec('1')).toBe(17);
-  expect(hexByteToDec('0f')).toBe(15);
-  expect(hexByteToDec('01')).toBe(1);
+test('appendRGB function should append RGB values to the HSLA array', () => {
+  expect(appendRGB([330, 0.8, 0.55, 1])).toEqual([232, 48, 140, 330, 0.8, 0.55, 1]);
+  expect(appendRGB([0, 0, 0.95, 0.45])).toEqual([242, 242, 242, 0, 0, 0.95, 0.45]);
+  expect(appendRGB([34, 1, 1, 1])).toEqual([255, 255, 255, 34, 1, 1, 1]);
 });
 
-test('hexByteToDec should return NaN if incorrect hexadecimal value provided', () => {
-  expect(hexByteToDec('fg')).toBeNaN();
-  expect(hexByteToDec('o1')).toBeNaN();
+test('assumeAlphaValue function should convert alpha value to corresponding numeric', () => {
+  expect(assumeAlphaValue('40%')).toBe(0.4);
+  expect(assumeAlphaValue('3.145317%')).toBe(0.0315);
+  expect(assumeAlphaValue('0.361')).toBe(0.361);
+  expect(assumeAlphaValue('.45')).toBe(0.45);
+  expect(assumeAlphaValue('-.25')).toBe(0);
+  expect(assumeAlphaValue('34e-2')).toBe(0.34);
+  expect(assumeAlphaValue(0.42)).toBe(0.42);
+  expect(assumeAlphaValue(4.2)).toBe(1);
 });
 
-test('hexByteToDec should truncate number to 8-bit number only', () => {
-  expect(hexByteToDec('fff')).toBe(255);
-  expect(hexByteToDec('ff0')).toBe(255);
+test('assumePersentageValue function should convert persentage value to corresponding numeric', () => {
+  expect(assumePersentageValue('40%')).toBe(0.4);
+  expect(assumePersentageValue('3.145317%')).toBe(0.03);
+  expect(assumePersentageValue('0.361')).toBe(NaN);
+  expect(assumePersentageValue('.45')).toBe(NaN);
+  expect(assumePersentageValue('3.4e1%')).toBe(0.34);
+  expect(assumePersentageValue(0.42)).toBe(0.42);
+  expect(assumePersentageValue(4.2)).toBe(1);
 });
 
-test('toDegrees function should convert CSS approved angle units to numeric degrees', () => {
-  expect(toDegrees('240deg')).toBe(240);
-  expect(toDegrees('360')).toBe(0);
-  expect(toDegrees('361deg')).toBe(1);
-  expect(toDegrees('.45turn')).toBe(162);
-  expect(toDegrees('-.25turn')).toBe(270);
-  expect(toDegrees('.25turns')).toBe(NaN);
-  expect(toDegrees('200grad')).toBe(180);
-  expect(toDegrees('0.25grad')).toBe(0);
-  expect(toDegrees('0.25rad')).toBe(14);
-  expect(toDegrees('.25RAD')).toBe(14);
-  expect(toDegrees('3.14rad')).toBe(180);
-  expect(toDegrees('-3.14rad')).toBe(180);
-  expect(toDegrees(90)).toBe(90);
+test('assumeHueValue function should convert CSS approved angle units to numeric degrees', () => {
+  expect(assumeHueValue('240deg')).toBe(240);
+  expect(assumeHueValue('360')).toBe(0);
+  expect(assumeHueValue('361deg')).toBe(1);
+  expect(assumeHueValue('.45turn')).toBe(162);
+  expect(assumeHueValue('-.25turn')).toBe(270);
+  expect(assumeHueValue('.25turns')).toBe(NaN);
+  expect(assumeHueValue('200grad')).toBe(180);
+  expect(assumeHueValue('0.25grad')).toBe(0);
+  expect(assumeHueValue('0.25rad')).toBe(14);
+  expect(assumeHueValue('.25RAD')).toBe(14);
+  expect(assumeHueValue('3.14rad')).toBe(180);
+  expect(assumeHueValue('-3.14rad')).toBe(180);
+  expect(assumeHueValue(90)).toBe(90);
 });
 
-test('decByteToHex function should convert integer to hexadecimal number, appending 0 at the start if needed', () => {
-  expect(decByteToHex(255)).toBe('ff');
-  expect(decByteToHex(0)).toBe('00');
-  expect(decByteToHex('155')).toBe('9b');
+test('assumeRgbValue function should convert Rgb value to corresponding numeric', () => {
+  expect(assumeRgbValue('40%')).toBe(102);
+  expect(assumeRgbValue('3.1457%')).toBe(8);
+  expect(assumeRgbValue('361')).toBe(255);
+  expect(assumeRgbValue('-.45')).toBe(0);
+  expect(assumeRgbValue('3.4e1')).toBe(34);
+  expect(assumeRgbValue(42)).toBe(42);
+  expect(assumeRgbValue(4.2)).toBe(4);
 });
 
-test('result of decByteToHex function should not exceed 8-bit range from 00 to ff', () => {
-  expect(decByteToHex(256)).toBe('ff');
-  expect(decByteToHex(-100)).toBe('00');
+test('defined function should indicate whether all arguments are defined - not Nil and not NaN', () => {
+  expect(defined(0, '', false)).toBe(true);
+  expect(defined(255, {}, [])).toBe(true);
+  expect(defined(255, NaN, 255)).toBe(false);
+  expect(defined(undefined)).toBe(false);
+  expect(defined(null)).toBe(false);
+});
+
+test('extractGroups function extracts groups with provided string and regex pattern', () => {
+  const str = 'Can you extract me?';
+  const re = /^.+(ex\w+)\s(.+)\?$/;
+  expect(extractGroups(str, re)).toEqual(['extract', 'me']);
+  expect(extractGroups('Hello World', re)).toEqual([]);
 });

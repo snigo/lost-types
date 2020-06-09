@@ -17,7 +17,7 @@ function checkLength() {
 function normalizeStep(step = 1) {
   step = +step;
   if (Number.isNaN(step)) step = 1;
-  if (step === 0 || step < 0) throw TypeError('Step cannot be 0 or negative number');
+  if (step <= 0) throw TypeError('Step cannot be 0 or negative number');
 
   return step;
 }
