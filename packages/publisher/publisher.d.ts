@@ -1,4 +1,4 @@
-declare namespace Publisher {
+export declare namespace Publisher {
   interface SubjectDescriptor<K = string | Symbol, V = any> {
     [key: K]: (value: V) => void;
   }

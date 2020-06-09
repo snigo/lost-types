@@ -37,3 +37,5 @@ declare namespace AliasMap {
     forEach(fn: CallbackFunction, thisArg: any);
   }
 }
+
+export = AliasMap;

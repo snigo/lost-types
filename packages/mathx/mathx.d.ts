@@ -1,4 +1,4 @@
-declare interface MathX {
+export declare interface MathX {
   approx(a: number, b: number, delta?: number): boolean;
   getPrecision(number: number): number;
   modulo(a: number, b: number): number;

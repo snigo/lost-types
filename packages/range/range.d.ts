@@ -1,4 +1,4 @@
-declare class Range {
+export declare class Range {
   constructor(rangeStart: number, rangeEnd: number, step?: number);
   static from(iterableNumbers: any): Range;
   get length(): number;

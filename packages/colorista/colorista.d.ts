@@ -1,6 +1,6 @@
 import { Color, AnyColor } from '../color/color';
 
-declare interface Colorista {
+export declare interface Colorista {
   contrast(color: AnyColor, base: AnyColor): number;
   cooler(color: AnyColor, intensity?: number, filter?: AnyColor): Color;
   getHueByOffset(hueGroup: number, hueGroupOffset?: number): number;
