@@ -1,6 +1,6 @@
 {
   "name": "@lost-types/color",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Greatly missed Color type for JavaScript",
   "author": "snigo <snigo.ogins@gmail.com>",
   "homepage": "https://github.com/snigo/lost-types#readme",

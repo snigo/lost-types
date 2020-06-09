@@ -1,6 +1,6 @@
 {
   "name": "@lost-types/range",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Range type somewhat influenced by the function of the same name from Python",
   "author": "snigo <snigo.ogins@gmail.com>",
   "homepage": "https://github.com/snigo/lost-types#readme",

@@ -1,6 +1,6 @@
 {
   "name": "@lost-types/mathx",
-  "version": "1.1.0",
+  "version": "1.2.1",
   "description": "Math Extended object with some additional useful functions for Math in JavaScript",
   "author": "snigo <snigo.ogins@gmail.com>",
   "homepage": "https://github.com/snigo/lost-types#readme",
