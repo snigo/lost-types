@@ -1,4 +1,4 @@
-const parseColorObject = require('../lib/object');
+const parseColorObject = require('../src/object');
 
 test('parses RGBA Object and otherwise returns empty array', () => {
   expect(parseColorObject({

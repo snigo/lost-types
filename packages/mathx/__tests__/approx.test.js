@@ -1,4 +1,4 @@
-const approx = require('../lib/approx');
+const approx = require('../src/approx');
 
 test('approx function should approximate value with given delta', () => {
   expect(approx(0.34, 0.45, 0.1)).toBe(false);

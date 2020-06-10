@@ -1,4 +1,4 @@
-const random = require('../lib/random');
+const random = require('../src/random');
 
 test('random function should generate random number within a range', () => {
   const randomInt = random([80, 100], 0);

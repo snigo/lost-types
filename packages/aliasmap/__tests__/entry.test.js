@@ -1,4 +1,4 @@
-const Entry = require('../lib/entry');
+const Entry = require('../src/entry');
 
 test('creating Entry instance', () => {
   const entry = new Entry('foo', 'bar', 'ironman');

@@ -1,4 +1,4 @@
-const getPrecision = require('../lib/get-precision');
+const getPrecision = require('../src/get-precision');
 
 test('counting basic floating number precisions', () => {
   expect(getPrecision(0.45)).toBe(2);

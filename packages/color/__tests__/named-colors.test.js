@@ -1,4 +1,4 @@
-const { namedColors, getColorName, parseNamed } = require('../lib/named');
+const { namedColors, getColorName, parseNamed } = require('../src/named');
 
 test('correct format of parseNamed output', () => {
   expect(namedColors.entryCount).toBe(140);

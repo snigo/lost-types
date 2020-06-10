@@ -1,5 +1,5 @@
-const Publisher = require('../lib/publisher');
-const Subscription = require('../lib/subscription');
+const Publisher = require('../src/publisher');
+const Subscription = require('../src/subscription');
 
 test('Publisher class', () => {
   class Counter extends Publisher {

@@ -1,4 +1,4 @@
-const mix = require('../lib/mix');
+const mix = require('../src/mix');
 
 test('mix function should mix colors', () => {
   expect(mix('rgb(128, 128, 128)', 'blue', 0.5).toHexString()).toBe('#4040c0');

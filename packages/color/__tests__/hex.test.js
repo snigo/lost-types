@@ -1,4 +1,4 @@
-const { parseHexColor, decByteToHex } = require('../lib/hex');
+const { parseHexColor, decByteToHex } = require('../src/hex');
 
 test('decByteToHex converts integer to hexadecimal number, appending 0 at the start if needed', () => {
   expect(decByteToHex(255)).toBe('ff');

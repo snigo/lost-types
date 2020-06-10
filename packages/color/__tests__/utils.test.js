@@ -7,7 +7,7 @@ const {
   assumeRgbValue,
   defined,
   extractGroups,
-} = require('../lib/utils');
+} = require('../src/utils');
 
 test('appendHSL function should append HSL values to the RGBA array', () => {
   expect(appendHSL([0, 191, 255, 1])).toEqual([0, 191, 255, 195, 1, 0.5, 1]);

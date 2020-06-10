@@ -1,5 +1,5 @@
 const Color = require('../../color/lib/color');
-const { cooler, warmer } = require('../lib/temperature');
+const { cooler, warmer } = require('../src/temperature');
 
 test('cooler function should return new color', () => {
   const originalColor = new Color('#bbb');

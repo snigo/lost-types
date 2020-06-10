@@ -1,7 +1,7 @@
-const Range = require('../../range/lib/range');
+const Range = require('@lost-types/range/src/range');
 const Color = require('../../color/lib/color');
-const { contrast } = require('../lib/contrast');
-const { randomRgbColor, randomHslColor, randomByContrast } = require('../lib/random');
+const { contrast } = require('../src/contrast');
+const { randomRgbColor, randomHslColor, randomByContrast } = require('../src/random');
 
 test('randomRgbColor gererates random color', () => {
   const totallyRandom = randomRgbColor();

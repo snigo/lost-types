@@ -6,7 +6,7 @@ const {
   invert,
   offsetHue,
   opposite,
-} = require('../lib/hue');
+} = require('../src/hue');
 
 test('gets correct hue by group offset', () => {
   expect(getHueByOffset(0, 0)).toBe(315);

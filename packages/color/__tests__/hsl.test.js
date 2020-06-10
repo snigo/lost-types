@@ -1,4 +1,4 @@
-const parseHsla = require('../lib/hsl');
+const parseHsla = require('../src/hsl');
 
 test('parses string in HSLA function comma notation', () => {
   expect(parseHsla('hsl(214, 80%, 65%)')).toEqual([94, 156, 237, 214, 0.8, 0.65, 1]);

@@ -1,4 +1,4 @@
-const AliasMap = require('../lib/aliasmap');
+const AliasMap = require('../src/aliasmap');
 
 test('creating AliasMap instance', () => {
   const aliasMap = new AliasMap();

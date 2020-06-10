@@ -1,4 +1,4 @@
-const parseColor = require('../lib/parse');
+const parseColor = require('../src/parse');
 
 test('should parse color in #-hexadecimal format', () => {
   expect(parseColor('#ff0099ff')).toEqual([255, 0, 153, 324, 1, 0.5, 1]);

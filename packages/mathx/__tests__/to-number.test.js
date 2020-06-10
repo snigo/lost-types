@@ -1,4 +1,4 @@
-const toNumber = require('../lib/to-number');
+const toNumber = require('../src/to-number');
 
 test('correctly converts provided number to a certain precision', () => {
   expect(toNumber('3.45e2')).toBe(345);

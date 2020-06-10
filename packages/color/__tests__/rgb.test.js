@@ -1,4 +1,4 @@
-const parseRgba = require('../lib/rgb');
+const parseRgba = require('../src/rgb');
 
 test('parses string in RGBA function comma notation', () => {
   expect(parseRgba('rgb(214, 80, 65)')).toEqual([214, 80, 65, 6, 0.65, 0.55, 1]);

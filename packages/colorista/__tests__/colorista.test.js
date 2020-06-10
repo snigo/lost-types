@@ -1,4 +1,4 @@
-const Colorista = require('../lib/colorista');
+const Colorista = require('../src/colorista');
 
 test('Colorist object has all methods', () => {
   expect(typeof Colorista.contrast).toBe('function');

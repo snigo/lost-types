@@ -1,6 +1,6 @@
 const Color = require('../../color/lib/color');
 const { approx } = require('../../mathx/lib/mathx');
-const { contrast, findByContrast } = require('../lib/contrast');
+const { contrast, findByContrast } = require('../src/contrast');
 
 test('contrast function should calculate contrast value between color and background', () => {
   expect(contrast('white', 'black')).toBe(21);

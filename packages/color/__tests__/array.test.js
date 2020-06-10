@@ -1,4 +1,4 @@
-const { parseRgbaArray, _parseHslaArray } = require('../lib/array');
+const { parseRgbaArray, _parseHslaArray } = require('../src/array');
 
 test('parses RGBA Array and otherwise returns empty array', () => {
   expect(parseRgbaArray([1, 2, 3])).toEqual([1, 2, 3, 210, 0.5, 0.01, 1]);

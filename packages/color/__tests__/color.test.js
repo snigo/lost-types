@@ -1,4 +1,4 @@
-const Color = require('../lib/color');
+const Color = require('../src/color');
 
 test('Should be able to be created from color string', () => {
   const colorWithAlpha = new Color('#fa45');

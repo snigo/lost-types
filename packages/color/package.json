@@ -20,10 +20,10 @@
     "type": "git",
     "url": "git+https://github.com/snigo/lost-types.git"
   },
-  "scripts": {
-    "lint": "eslint lib/**",
-    "test": "npx jest",
-    "prepublish": "npm run lint && npm run test"
+  "dependencies": {
+    "@lost-types/alias-map": "^1.2.1",
+    "@lost-types/range": "^1.2.1",
+    "@lost-types/mathx": "^1.2.1"
   },
   "bugs": {
     "url": "https://github.com/snigo/lost-types/issues"

@@ -1,4 +1,4 @@
-const MathX = require('../lib/mathx');
+const MathX = require('../src/mathx');
 
 test('MathX should be an object with methods', () => {
   expect(typeof MathX).toBe('object');

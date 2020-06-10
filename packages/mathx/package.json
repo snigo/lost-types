@@ -21,11 +21,6 @@
     "type": "git",
     "url": "git+https://github.com/snigo/lost-types.git"
   },
-  "scripts": {
-    "lint": "eslint lib/**",
-    "test": "npx jest",
-    "prepublish": "npm run lint && npm run test"
-  },
   "bugs": {
     "url": "https://github.com/snigo/lost-types/issues"
   },

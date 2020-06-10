@@ -1,4 +1,4 @@
-const modulo = require('../lib/modulo');
+const modulo = require('../src/modulo');
 
 test('correct modulo value for positive and negative numbers', () => {
   expect(modulo(11, 3)).toBe(2);
