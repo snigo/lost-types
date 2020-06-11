@@ -37,13 +37,7 @@ class Color {
   }
 
   get luminance() {
-    const [R, G, B] = [this.red, this.green, this.blue]
-      .map((value) => {
-        const rsV = value / 255;
-        return rsV <= 0.03928 ? rsV / 12.92 : ((rsV + 0.055) / 1.055) ** 2.4;
-      });
-
-    return round(0.2126 * R + 0.7152 * G + 0.0722 * B, 4);
+    return this.toXYZ()[1];
   }
 
   get mode() {
@@ -194,6 +188,16 @@ class Color {
       ? ((this.luminance ** (1 / 2.4)) * 1.055 - 0.055) * 255
       : this.luminance * 3294.6;
     return new Color([l, l, l, this.alpha]);
+  }
+
+  toXYZ() {
+    const rgbXyzMatrix = [[0.4125, 0.3576, 0.1804], [0.2127, 0.7152, 0.0722], [0.0193, 0.1192, 0.9503]];
+    return [this.red, this.green, this.blue]
+      .map((value) => {
+        const V = value / 255;
+        return V <= 0.03928 ? V / 12.92 : ((V + 0.055) / 1.055) ** 2.4;
+      })
+      .map((_, i, rgb) => round(rgb.reduce((a, b, j) => a + b * rgbXyzMatrix[i][j]), 4));
   }
 }
 
