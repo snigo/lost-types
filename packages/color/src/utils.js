@@ -1,9 +1,9 @@
-import Range from '@lost-types/range';
-import { toNumber, round } from '@lost-types/mathx';
+import Range from '@lost-types/range/src/range';
+import { toNumber, round } from '@lost-types/mathx/src/mathx';
 
-const rgbRange = new Range(255);
-const hueRange = new Range(359);
-const oneRange = new Range(1);
+export const rgbRange = new Range(255);
+export const hueRange = new Range(359);
+export const oneRange = new Range(1);
 
 /**
  * @function appendHSL Helper function for parseColor()

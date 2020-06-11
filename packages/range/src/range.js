@@ -1,4 +1,4 @@
-import { getPrecision, modulo } from '@lost-types/mathx';
+import { getPrecision, modulo } from '@lost-types/mathx/src/mathx';
 
 import { checkLength, normalizeStep } from './helpers';
 

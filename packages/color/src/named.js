@@ -1,4 +1,4 @@
-import AliasMap from '@lost-types/alias-map';
+import AliasMap from '@lost-types/alias-map/lib/aliasmap';
 
 export const namedColors = new AliasMap();
 
