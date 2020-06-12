@@ -4,6 +4,7 @@ import parseColor from './parse';
 import { decByteToHex } from './hex';
 import { getColorName } from './named';
 import { oneRange } from './utils';
+import { applyMatrix, RGB_XYZ_MATRIX, XYZ_RGB_MATRIX } from './matrix';
 
 
 class Color {
@@ -36,8 +37,55 @@ class Color {
     });
   }
 
+  static get D50() {
+    return [0.96422, 1, 0.82521];
+  }
+
+  static get D65() {
+    return [0.9505, 1, 1.089];
+  }
+
+  static transferGamma(linrgb) {
+    if (!Array.isArray(linrgb)) return undefined;
+    return linrgb.map((V) => V > 0.0031308 ? V ** (1 / 2.4) * 1.055 - 0.055 : 12.92 * V);
+  }
+
+  static xyz(xyz) {
+    if (!Array.isArray(xyz)) return undefined;
+    const alpha = xyz[3] || 1;
+    const linRgb = applyMatrix(xyz.slice(0, 3), XYZ_RGB_MATRIX);
+    return new Color(Color.transferGamma(linRgb).concat(alpha));
+  }
+
+  static lab(lab, whitePoint = Color.D50) {
+    if (!Array.isArray(lab)) return undefined;
+    const alpha = lab[3] || 1;
+    const e = 0.008856;
+    const k = 903.3;
+    const fy = (lab[0] + 16) / 116;
+    const fx = lab[1] / 500 + fy;
+    const fz = fy - lab[2] / 200;
+    const xyz = [
+      fx ** 3 > e ? fx ** 3 : (116 * fx - 16) / k,
+      lab[0] > k * e ? ((lab[0] + 16) / 116) ** 3 : lab[0] / k,
+      fz ** 3 > e ? fz ** 3 : (116 * fz - 16) / k,
+    ].map((V, i) => V * whitePoint[i]);
+
+    return Color.xyz(xyz.concat(alpha));
+  }
+
+  static lch(lch) {
+    if (!Array.isArray(lch)) return undefined;
+    return Color.lab([
+      lch[0],
+      lch[1] * Math.cos((lch[2] * Math.PI) / 180),
+      lch[1] * Math.sin((lch[2] * Math.PI) / 180),
+      lch[3] || 1,
+    ]);
+  }
+
   get luminance() {
-    return this.toXYZ()[1];
+    return this.toXyz()[1];
   }
 
   get mode() {
@@ -59,8 +107,8 @@ class Color {
 
   toRgbString() {
     return this.alpha < 1
-      ? `rgba(${this.red}, ${this.green}, ${this.blue}, ${this.alpha})`
-      : `rgb(${this.red}, ${this.green}, ${this.blue})`;
+      ? `rgb(${this.red} ${this.green} ${this.blue} / ${this.alpha})`
+      : `rgb(${this.red} ${this.green} ${this.blue})`;
   }
 
   toHexString() {
@@ -69,8 +117,8 @@ class Color {
 
   toHslString() {
     return this.alpha < 1
-      ? `hsla(${this.hue}, ${round(this.saturation * 100, 0)}%, ${round(this.lightness * 100, 0)}%, ${this.alpha})`
-      : `hsl(${this.hue}, ${round(this.saturation * 100, 0)}%, ${round(this.lightness * 100, 0)}%)`;
+      ? `hsl(${this.hue}deg ${round(this.saturation * 100, 0)}% ${round(this.lightness * 100, 0)}% / ${this.alpha})`
+      : `hsl(${this.hue}deg ${round(this.saturation * 100, 0)}% ${round(this.lightness * 100, 0)}%)`;
   }
 
   contrast(base) {
@@ -97,10 +145,11 @@ class Color {
   }
 
   opacity(value = 1) {
+    if (this.alpha === value) return this;
     return new Color({ ...this, alpha: value });
   }
 
-  findByContrast(targetContrast, hue, saturation) {
+  findByContrast(targetContrast, hue = 0, saturation = 0) {
     const CONTRAST_DELTA = 0.05;
     const MAX_ITERATION_COUNT = 7;
 
@@ -112,12 +161,16 @@ class Color {
     let iterationCount = 0;
 
     while (iterationCount <= MAX_ITERATION_COUNT) {
-      color = new Color({
+      const _color = new Color({
         hue,
         saturation,
         lightness: round((maxL + minL) / 2, 2),
       });
-      currentContrast = this.contrast(color);
+      const _contrast = this.contrast(_color);
+      if (Math.abs(_contrast - targetContrast) < Math.abs(currentContrast - targetContrast)) {
+        currentContrast = _contrast;
+        color = _color;
+      }
 
       if (approx(currentContrast, targetContrast, CONTRAST_DELTA)) return color;
 
@@ -190,14 +243,62 @@ class Color {
     return new Color([l, l, l, this.alpha]);
   }
 
-  toXYZ() {
-    const rgbXyzMatrix = [[0.4125, 0.3576, 0.1804], [0.2127, 0.7152, 0.0722], [0.0193, 0.1192, 0.9503]];
+  grayscaleLab() {
+    const L = (this.toLab()[0] / 100) * 255;
+    return new Color([L, L, L, this.alpha]);
+  }
+
+  toLinearRgb() {
     return [this.red, this.green, this.blue]
       .map((value) => {
         const V = value / 255;
-        return V <= 0.03928 ? V / 12.92 : ((V + 0.055) / 1.055) ** 2.4;
-      })
-      .map((_, i, rgb) => round(rgb.reduce((a, b, j) => a + b * rgbXyzMatrix[i][j]), 4));
+        return round(V < 0.04045 ? V / 12.92 : ((V + 0.055) / 1.055) ** 2.4, 7);
+      });
+  }
+
+  toXyz() {
+    return applyMatrix(this.toLinearRgb(), RGB_XYZ_MATRIX).map((v) => round(v, 7));
+  }
+
+  toLab(whitePoint = Color.D50) {
+    const e = 0.008856;
+    const k = 903.3;
+    const [fx, fy, fz] = this.toXYZ()
+      .map((V, i) => V / whitePoint[i])
+      .map((vr) => vr > e ? Math.cbrt(vr) : (k * vr + 16) / 116);
+
+    return [
+      116 * fy - 16,
+      500 * (fx - fy),
+      200 * (fy - fz),
+    ].map((v) => round(v, 7));
+  }
+
+  toLch() {
+    const [L, a, b] = this.toLab();
+    return [
+      L,
+      Math.sqrt(a ** 2 + b ** 2),
+      modulo((Math.atan2(b, a) * 180) / Math.PI, 360),
+    ].map((v) => round(v, 7));
+  }
+
+  toLchString() {
+    const [L, C, H] = this.toLch().map((v) => round(v, 3));
+    return this.alpha < 1
+      ? `lch(${L}% ${C} ${H}deg / ${this.alpha})`
+      : `lch(${L}% ${C} ${H}deg)`;
+  }
+
+  toLabString() {
+    const [L, a, b] = this.toLab().map((v) => round(v, 3));
+    return this.alpha < 1
+      ? `lab(${L}% ${a} ${b} / ${this.alpha})`
+      : `lab(${L}% ${a} ${b})`;
+  }
+
+  toRgb() {
+    return [this.red, this.green, this.blue, this.alpha];
   }
 }
 
