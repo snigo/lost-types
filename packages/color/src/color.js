@@ -263,7 +263,7 @@ class Color {
   toLab(whitePoint = Color.D50) {
     const e = 0.008856;
     const k = 903.3;
-    const [fx, fy, fz] = this.toXYZ()
+    const [fx, fy, fz] = this.toXyz()
       .map((V, i) => V / whitePoint[i])
       .map((vr) => vr > e ? Math.cbrt(vr) : (k * vr + 16) / 116);
 
