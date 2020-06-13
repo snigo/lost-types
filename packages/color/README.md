@@ -90,6 +90,71 @@ new Color('#f4a3');
 
 ```
 
+#### String in HSL function notation
+
+```js
+
+// Current standard whitespace notation
+new Color('hsl(126deg 13% 76% / 0.34)');
+new Color('hsl(126 5% 43% / 34%)');
+new Color('hsl(0.5turn 13% 76%)');
+new Color('hsl(2.6rad 100% 50%)');
+
+// Comma separated notation
+new Color('hsl(126deg, 13%, 76%, 0.34)');
+new Color('hsl(126, 5%, 43%, 34%)');
+new Color('hsl(0.5turn, 13%, 76%)');
+new Color('hsl(2.6rad, 100%, 50%)');
+
+```
+
+#### Standard named colors and transparent keyword
+
+```js
+
+new Color('red');
+new Color('Yellow');
+new Color('SaLmOn');
+new Color('transparent');
+
+```
+
+#### RGB(A) Array
+
+```js
+
+new Color([255, 243, 5]);
+new Color([255, 243, 5, 0.15]);
+new Color(['34%', '43%', '100%']);
+
+```
+
+#### Color descriptor object
+
+```js
+
+new Color({
+  red: 14,
+  green: 25,
+  blue: 145,
+});
+
+new Color({
+  red: '14',
+  green: '25%',
+  blue: 145,
+  alpha: '12%',
+});
+
+new Color({
+  hue: '14grad',
+  saturation: '25%',
+  lightness: 0.45,
+  alpha: 0.1,
+});
+
+```
+
 ### Properties
 
 #### `Color.name`
