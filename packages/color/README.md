@@ -28,7 +28,7 @@ const red = new Color('red');
 
 Consider this example, you've assigned the color of the HTML element with `hsl()` notation, let's say `hsl(314, 86%, 49%)`. After that there is absolutely no way to get this value back and you will receive something like `rgb(232, 17, 182)` if you try. **“But I needed hue?!!”** And in general, it’s rather strange that we have Date Picker and Date type, but Color Picker doesn’t have Color type.
 
-Speaking of Date type, it became an architectural blueprint for Color class, just like Date, Color’s sole purpose is to parse color, store the most valuable information about this color for other libraries to use and output it in different formats. As simple as is. If you're looking for library of function to adjust color, check [Colorista library](https://github.com/snigo/lost-types/tree/master/packages/colorista) from @lost-types collection.
+Apart from browser we don't have native color parsing solutions on other environments, this Color class doesn't rely on browswer and can parse color in any environment. See parsing options below.
 
 ```js
 
@@ -52,21 +52,41 @@ Creates a new Color instance.
 ```js
 
 new Color('#ff0');
-/* 
-Color{
-  red: 255,
-  green: 255,
-  blue: 0,
-  hue: 60,
-  saturation: 1,
-  lightness: 0.5,
-  alpha: 1,
-  brightness: 0.9278,
-  hueGroup: 2,
-  hueGroupOffset: 15,
-  name: 'yellow'
-}
-*/
+
+```
+
+### Parsing options
+
+#### String in RGB function notation
+
+```js
+
+// Current standard whitespace notation using absolute values
+new Color('rgb(126 13 76 / 0.34)');
+
+// Whitespace notation using relative values
+new Color('rgb(84% 5% 43% / 34%)');
+
+// Whitespace notation using mixed values (NOTE: Doesn't supported by browsers)
+new Color('rgb(126 13% 76%)');
+
+// Comma separated notation
+new Color('rgba(126, 13, 76, 0.34)');
+new Color('rgb(126, 13, 76, 0.34)');
+new Color('rgba(126, 13, 76)');
+new Color('rgb(26%, 13%, 76%, 34%)');
+new Color('rgba(126, 13%, 76, 34%)');
+
+```
+
+#### String in #RRGGBB hexadecimal notation
+
+```js
+
+new Color('#ff45ad');
+new Color('#ff45ad3e');
+new Color('#f4a');
+new Color('#f4a3');
 
 ```
 

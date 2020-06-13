@@ -54,10 +54,10 @@ class Color {
     if (!Array.isArray(xyz)) return undefined;
     const alpha = xyz[3] || 1;
     const linRgb = applyMatrix(xyz.slice(0, 3), XYZ_RGB_MATRIX);
-    return new Color(Color.transferGamma(linRgb).concat(alpha));
+    return new Color(Color.transferGamma(linRgb).map((V) => V * 255).concat(alpha));
   }
 
-  static lab(lab, whitePoint = Color.D50) {
+  static lab(lab, whitePoint = Color.D65) {
     if (!Array.isArray(lab)) return undefined;
     const alpha = lab[3] || 1;
     const e = 0.008856;
@@ -84,8 +84,46 @@ class Color {
     ]);
   }
 
+  static hbw(hbw) {
+    if (!Array.isArray(hbw)) return undefined;
+    const alpha = hbw[3] || 1;
+    const lightness = (1 - hbw[1] + hbw[2]) / 2;
+    const chroma = 1 - hbw[1] - hbw[2];
+    let saturation;
+    if (lightness > 0 && lightness <= 0.5) {
+      saturation = chroma / (2 * lightness);
+    } else {
+      saturation = chroma / ((2 - 2 * lightness) || lightness);
+    }
+    return new Color({
+      hue: hbw[0],
+      lightness,
+      saturation,
+      alpha,
+    });
+  }
+
   get luminance() {
     return this.toXyz()[1];
+  }
+
+  get chroma() {
+    const rgbr = this.toRgbr().slice(0, 3);
+    return Math.max(...rgbr) - Math.min(...rgbr);
+  }
+
+  get intensity() {
+    return round(this.toRgbr().slice(0, 3).reduce((s, V) => s + V, 0) / 3, 4);
+  }
+
+  get maxValue() {
+    const rgbr = this.toRgbr().slice(0, 3);
+    return Math.max(...rgbr);
+  }
+
+  get whiteness() {
+    const rgbr = this.toRgbr().slice(0, 3);
+    return Math.min(...rgbr);
   }
 
   get mode() {
@@ -98,6 +136,18 @@ class Color {
 
   get hueGroupOffset() {
     return modulo((this.hue % 30) + 15, 30);
+  }
+
+  get hrad() {
+    return round(this.hue * (Math.PI / 180), 4);
+  }
+
+  get hgrad() {
+    return round(this.hue / 0.9, 4);
+  }
+
+  get hturn() {
+    return round(this.hue / 360, 4);
   }
 
   get name() {
@@ -146,7 +196,7 @@ class Color {
 
   opacity(value = 1) {
     if (this.alpha === value) return this;
-    return new Color({ ...this, alpha: value });
+    return new Color([this.red, this.green, this.blue, value]);
   }
 
   findByContrast(targetContrast, hue = 0, saturation = 0) {
@@ -260,7 +310,7 @@ class Color {
     return applyMatrix(this.toLinearRgb(), RGB_XYZ_MATRIX).map((v) => round(v, 7));
   }
 
-  toLab(whitePoint = Color.D50) {
+  toLab(whitePoint = Color.D65) {
     const e = 0.008856;
     const k = 903.3;
     const [fx, fy, fz] = this.toXyz()
@@ -299,6 +349,57 @@ class Color {
 
   toRgb() {
     return [this.red, this.green, this.blue, this.alpha];
+  }
+
+  toRgbr() {
+    return [this.red, this.green, this.blue]
+      .map((V) => round(V / 255, 2))
+      .concat(this.alpha);
+  }
+
+  copyWith(params) {
+    if ('red' in params || 'blue' in params || 'green' in params) {
+      return new Color({
+        red: this.red,
+        green: this.green,
+        blue: this.blue,
+        alpha: this.alpha,
+        ...params,
+      });
+    }
+
+    if ('hue' in params || 'saturation' in params || 'lightness' in params) {
+      return new Color({
+        hue: this.hue,
+        saturation: this.saturation,
+        lightness: this.lightness,
+        alpha: this.alpha,
+        ...params,
+      });
+    }
+
+    if ('alpha' in params) {
+      return this.opacity(params.alpha);
+    }
+
+    return this;
+  }
+
+  toHwb() {
+    const rgbr = this.toRgbr().slice(0, 3);
+    return [
+      this.hue,
+      Math.min(...rgbr),
+      1 - Math.max(...rgbr),
+      this.alpha,
+    ];
+  }
+
+  toHbwString() {
+    const [h, b, w] = this.toHwb();
+    return this.alpha < 1
+      ? `hbw(${h}deg ${b}% ${w}% / ${this.alpha})`
+      : `hbw(${h}deg ${b}% ${w}%)`;
   }
 }
 
