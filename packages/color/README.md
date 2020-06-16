@@ -159,7 +159,7 @@ new Color({
 
 #### `Color.name`
 
-Returns color name if color is one of CSS-supported [named colors](https://www.w3.org/TR/css-color-4/#named-colors).
+Returns color name if color is one of CSS-supported [named colors](https://www.w3.org/TR/css-color-4/#named-colors). If color is semi-transparent (has alpha value less than 1) color name is concatenated with `*`.
 
 ```js
 
@@ -168,8 +168,8 @@ crimson.name; // "crimson"
 
 const transparent = new Color('transparent');
 transparent.toRgbString(); // "rgba(0, 0, 0, 0)"
-// NOTE: Name property ignores alpha value
-transparent.name; // "black"
+// NOTE: Asterix added
+transparent.name; // "black*"
 
 ```
 
@@ -199,20 +199,31 @@ royalblue.blue; // 225
 ***
 
 #### `Color.hue`
+#### `Color.hrad`
+#### `Color.hgrad`
+#### `Color.hturn`
 
-Returns the hue angle of the color on the color wheel in degrees. Number in [0...359] range, where 0 is red.
+Returns the hue angle of the color on the color wheel in degrees (`hue`), radians (`hrad`), gradients (`hgrad`) and turns or cycles (`hturn`). 0 degrees is referred to red color.
 
 ```js
 
 const darkgreen = new Color('hsl(120deg 100% 25%)');
 darkgreen.hue; // 120
+darkmagenta.hrad; // 2.0944
+darkmagenta.hgrad; // 133.3333
+darkmagenta.hturn; // 0.3333
 
-const darkmagenta = new Color('hsla(-45, 65%, 35%)');
+const darkmagenta = new Color('hsla(-0.125turn, 65%, 35%)');
 darkmagenta.hue; // 315
+darkmagenta.hrad; // 5.4978
+darkmagenta.hgrad; // 350
+darkmagenta.hturn; // 0.875
+
 
 ```
 
 ***
+
 
 #### `Color.saturation`
 
@@ -248,6 +259,32 @@ black.lightness; // 0.17
 
 ```
 
+***
+
+#### `Color.whiteness`
+
+Returns the color whiteness value of HWB representation **as number**. Number in [0...1] range, where 0 is a tone of the color (50% lightness) and 1 is completely white.
+
+```js
+
+const blue = new Color('rgb(74 144 226)');
+blue.whiteness; // 0.29
+blue.toHwbString(); // hbw(212deg 29% 11%)
+
+```
+
+***
+
+#### `Color.intensity`
+
+Returns the color intensity value of HSI representation **as number**, also known as component average. Number in [0...1] range.
+
+```js
+
+const amber = new Color('#FFBF00');
+amber.intensity; // 0.5833
+
+```
 
 ***
 
@@ -270,20 +307,21 @@ transparent.alpha; // 0
 
 ***
 
-#### `Color.brightness`
+#### `Color.luminance`
 
-Returns relative brightness of the color of any point in a colorspace, normalized to 0 for darkest black and 1 for lightest white. Number in [0...1] range. Relative brightness is used for calculating color contrast.
+Returns relative luminance of the color of any point in a colorspace, normalized to 0 for darkest black and 1 for lightest white. Number in [0...1] range. Relative luminance is used for calculating color contrast.
 
 ```js
 
 const royalblue = new Color('#4169e1');
-royalblue.brightness; // 0.1666
+royalblue.luminance; // 0.1666
 
 const violet = new Color('violet');
-violet.brightness; // 0.4032
+violet.luminance; // 0.4032
 
 // Calculate contrast ratio
-(violet.brightness + 0.05) / (royalblue.brightness + 0.05); // 2.092336103416436
+(violet.luminance + 0.05) / (royalblue.luminance + 0.05); // 2.092336103416436
+violet.contrast(royalblue); // 2.09
 
 ```
 
@@ -328,13 +366,55 @@ Even though color warmth is hugely subjective, you can can presume color groups 
 
 **NOTE:** The central color of each group will have `Color.hueGroupOffset` equal to 15, not 0.
 
+### Static properties
+
+#### `Color.D50`
+#### `Color.D65`
+
+Returns CIEXYZ array of reference white points D50 and D65 respectively.
+
+```js
+
+Color.D50; // [0.96422, 1, 0.82521]
+Color.D65; // [0.9505, 1, 1.089]
+
+```
+
+### Static methods
+
+#### `Color.transferGamma()`
+
+The sRGB transfer function ("gamma"), transfers rgb XYZ gamma (2.4) to linear sRGB gamma (1.0). Necessary for color conversions between CIEXYZ and sRGB.
+
+| **Parameter** | **Type**   | **Default value** | **Notes**                                      |
+|---------------|------------|-------------------|------------------------------------------------|
+| `linrgb`      | `number[]` |                   | Array or rgb values in gamma 2.4               |
+
+
+***
+
+#### `Color.xyz()`
+
+Returns new Color instance based on XYZ values and optionally alpha.
+
+| **Parameter** | **Type**   | **Default value** | **Notes**                                      |
+|---------------|------------|-------------------|------------------------------------------------|
+| `xyza`        | `number[]` |                   | Array or XYZ values and optional alpha value   |
+
+**Important note:** CIE XYZ color space is greater than sRGB, therefore conversion to RGB might be incorrect (when color is outside RGB gamut). You should only rely on this conversion if you definitely know the color is a part of sRGB color space.
+
+```js
+
+const xyz = Color.xyz([])
+
+
 ### Methods
 
 #### `Color.prototype.toRgbString()`
 #### `Color.prototype.toHexString()`
 #### `Color.prototype.toHslString()`
 
-Returns string representation of the color in either RGB, #-hexadecomal or HSL format. 
+Returns string representation of the color in either RGB, #-hexadecimal or HSL format. 
 
 ```js
 

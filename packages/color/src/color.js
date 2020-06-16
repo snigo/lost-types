@@ -310,7 +310,7 @@ class Color {
     return applyMatrix(this.toLinearRgb(), RGB_XYZ_MATRIX).map((v) => round(v, 7));
   }
 
-  toLab(whitePoint = Color.D65) {
+  toLab(whitePoint = Color.D50) {
     const e = 0.008856;
     const k = 903.3;
     const [fx, fy, fz] = this.toXyz()
@@ -324,8 +324,8 @@ class Color {
     ].map((v) => round(v, 7));
   }
 
-  toLch() {
-    const [L, a, b] = this.toLab();
+  toLch(whitePoint = Color.D50) {
+    const [L, a, b] = this.toLab(whitePoint);
     return [
       L,
       Math.sqrt(a ** 2 + b ** 2),
@@ -333,15 +333,15 @@ class Color {
     ].map((v) => round(v, 7));
   }
 
-  toLchString() {
-    const [L, C, H] = this.toLch().map((v) => round(v, 3));
+  toLchString(whitePoint = Color.D50) {
+    const [L, C, H] = this.toLch(whitePoint).map((v) => round(v, 3));
     return this.alpha < 1
       ? `lch(${L}% ${C} ${H}deg / ${this.alpha})`
       : `lch(${L}% ${C} ${H}deg)`;
   }
 
-  toLabString() {
-    const [L, a, b] = this.toLab().map((v) => round(v, 3));
+  toLabString(whitePoint = Color.D50) {
+    const [L, a, b] = this.toLab(whitePoint).map((v) => round(v, 3));
     return this.alpha < 1
       ? `lab(${L}% ${a} ${b} / ${this.alpha})`
       : `lab(${L}% ${a} ${b})`;
@@ -389,17 +389,17 @@ class Color {
     const rgbr = this.toRgbr().slice(0, 3);
     return [
       this.hue,
-      Math.min(...rgbr),
-      1 - Math.max(...rgbr),
+      round(Math.min(...rgbr), 2),
+      round(1 - Math.max(...rgbr), 2),
       this.alpha,
     ];
   }
 
-  toHbwString() {
+  toHwbString() {
     const [h, b, w] = this.toHwb();
     return this.alpha < 1
-      ? `hbw(${h}deg ${b}% ${w}% / ${this.alpha})`
-      : `hbw(${h}deg ${b}% ${w}%)`;
+      ? `hbw(${h}deg ${round(b * 100, 0)}% ${round(w * 100, 0)}% / ${this.alpha})`
+      : `hbw(${h}deg ${round(b * 100, 0)}% ${round(w * 100, 0)}%)`;
   }
 }
 
